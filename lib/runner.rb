@@ -25,7 +25,7 @@ class Runner
             Global.logger.debug("Failed request HTTP #{ bot.response.code } with #{ bot }\n#{ bot.response.result }")
           elsif bot.found?
             Global.logger.info("Found #{ bot } and notifying #{ notifiers }")
-            Notifier.notify_all(notifiers: notifiers, title: bot.notification.title, message: bot.notification.message)
+            Notifier.notify_all(notifiers: notifiers, title: bot.notification[:title], message: bot.notification[:message])
           end
         rescue => e
           Global.logger.error("Error with #{ bot } and notifying #{ error_notifiers }")
