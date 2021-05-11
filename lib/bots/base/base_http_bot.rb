@@ -69,7 +69,7 @@ class BaseHTTPBot
     end
 
     def success?
-      result && result.success?
+      !!(result && result.success?)
     end
 
     def code
@@ -78,6 +78,11 @@ class BaseHTTPBot
 
     def available?
       raise NotImplementedError
+    end
+
+    def to_s
+      rescue_avail = available? rescue nil
+      "#<#{ self.class } code=#{ code } success=#{ success? } available=#{ rescue_avail } #{ http_method.to_s.upcase } #{ path }>"
     end
   end
 end
