@@ -1,9 +1,9 @@
 # frozen_string_literal: true
 class BaseHTTPBot
-  attr_reader :notifiers, :response
+  attr_reader :response
 
-  def initialize(notifiers: nil)
-    @notifiers = notifiers
+  def initialize
+    @response = nil
   end
 
   def build_response
@@ -21,15 +21,11 @@ class BaseHTTPBot
       if response.success?
         Global.logger.info("[#{ self.class }] success #{ response }")
 
-        if response.available?
-          Global.logger.info("[#{ self.class }] available!!!")
-
-          notifiers.each do |notifier_class|
-            Global.logger.info("[#{ self.class }] delivering notification to #{ notifier_class }")
-            notifier_class.new.notify(**notification)
-          end
+        if response.found?
+          Global.logger.info("[#{ self.class }] found!!!")
+          # fall through and return true now
         else
-          Global.logger.info("[#{ self.class }] not available")
+          Global.logger.info("[#{ self.class }] not found")
         end
       else
         Global.logger.info("[#{ self.class }] failed #{ response }")
@@ -37,14 +33,24 @@ class BaseHTTPBot
     rescue => e
       Global.logger.error("[#{ self.class }] Error in #poll: #{ e.message }")
       Global.logger.error(e)
-      # TODO handle error
+      raise # TODO handle error
     end
+
+    found?
+  end
+
+  def found?
+    response && response.success? && response.found?
+  end
+
+  def success?
+    response && response.success?
   end
 
   def notification
     {
-      title: "#{ self.class } available",
-      message: "Found a dose available with #{ self.class } #{ response }",
+      title: "#{ self.class } found",
+      message: "Found a dose with #{ self.class } #{ response }",
     }
   end
 
@@ -78,13 +84,13 @@ class BaseHTTPBot
       result && result.code
     end
 
-    def available?
+    def found?
       raise NotImplementedError
     end
 
     def to_s
-      rescue_avail = available? rescue nil
-      "#<#{ self.class } code=#{ code } success=#{ success? } available=#{ rescue_avail } #{ http_method.to_s.upcase } #{ path }>"
+      rescue_found = found? rescue nil
+      "#<#{ self.class } code=#{ code } success=#{ success? } found=#{ rescue_found } #{ http_method.to_s.upcase } #{ path }>"
     end
   end
 end

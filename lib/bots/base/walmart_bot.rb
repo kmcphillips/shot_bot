@@ -10,7 +10,7 @@ class WalmartBot < BaseHTTPBot
       @http_method = :get
     end
 
-    def available?
+    def found?
       !!(result.body.index("next_date") || result.body.index("nextDate"))
     end
   end

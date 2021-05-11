@@ -10,7 +10,7 @@ require "twilio-ruby"
 
 # Inject all dependencies as exported globals
 Global = Class.new do
-  attr_accessor :root, :config, :logger, :bots, :notifiers, :datetime_format
+  attr_accessor :root, :config, :logger, :bots, :notifiers, :error_notifiers
 end.new
 
 Global.root = Pathname.new(File.dirname(__FILE__))
@@ -28,6 +28,8 @@ Global.logger = Logger.new(logger_file, level: Logger::INFO)
 
 Global.logger.extend(ActiveSupport::Logger.broadcast(Logger.new(STDOUT))) if Global.config.verbose
 
+require_relative "lib/notifier"
+
 require_relative "lib/bots/base/base_http_bot"
 require_relative "lib/bots/base/walmart_bot"
 require_relative "lib/bots/walmart_billings_bot"
@@ -38,3 +40,4 @@ require_relative "lib/notifiers/sms_notifier"
 
 Global.bots = Global.config.bots.map(&:constantize)
 Global.notifiers = Global.config.notifiers.map(&:constantize)
+Global.error_notifiers = Global.config.error_notifiers.map(&:constantize)
