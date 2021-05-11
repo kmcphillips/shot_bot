@@ -1,17 +1,19 @@
 # frozen_string_literal: true
 class BaseHTTPBot
-  attr_reader :notifiers, :response, :response_class
-  class_attribute :response_class
+  attr_reader :notifiers, :response
 
   def initialize(notifiers: nil)
     @notifiers = notifiers
-    @response = self.class.response_class.new
   end
 
-  attr_reader :response
+  def build_response
+    raise NotImplementedError
+  end
 
   def poll
     Global.logger.info("[#{ self.class }] #poll #{ response }")
+
+    @response = build_response
 
     begin
       response.fetch

@@ -28,7 +28,8 @@ Global.logger = Logger.new(logger_file, level: Logger::INFO)
 Global.logger.extend(ActiveSupport::Logger.broadcast(Logger.new(STDOUT))) if Global.config.verbose
 
 require_relative "lib/bots/base/base_http_bot"
-require_relative "lib/bots/walmart_bot"
+require_relative "lib/bots/base/walmart_bot"
+require_relative "lib/bots/walmart_billings_bot"
 
 require_relative "lib/notifiers/console_notifier"
 require_relative "lib/notifiers/email_notifier"
