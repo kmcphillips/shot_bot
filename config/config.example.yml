@@ -1,0 +1,20 @@
+notifiers:
+  - EmailNotifier
+  - ConsoleNotifier
+  - SMSNotifier
+
+bots:
+  - WalmartBot
+
+interval_seconds: 60
+
+verbose: true
+
+email:
+  smtp_address: smtp.example.com
+  smtp_port: 587
+  smtp_domain: mail.example.com
+  smtp_username: ex@mail.example.com
+  smtp_password: asdf
+  smtp_from: "\"Vaccine Bot\" <vaccines@mail.example.com>"
+  email_notifier_recipient: test@example.com
