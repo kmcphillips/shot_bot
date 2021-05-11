@@ -6,6 +6,9 @@ notifiers:
 bots:
   - WalmartBot
 
+walmart_bot:
+  cookie: "TODO"
+
 interval_seconds: 60
 
 verbose: true
