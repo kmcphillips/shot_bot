@@ -6,6 +6,7 @@ require "logger"
 require "httparty"
 require "tempfile"
 require "mail"
+require "twilio-ruby"
 
 # Inject all dependencies as exported globals
 Global = Class.new do

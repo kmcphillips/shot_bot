@@ -4,7 +4,7 @@ notifiers:
   - SMSNotifier
 
 bots:
-  - WalmartBot
+  - WalmartBillingsBot
 
 walmart_bot:
   cookie: "TODO"
@@ -21,3 +21,9 @@ email:
   smtp_password: asdf
   smtp_from: "\"Vaccine Bot\" <vaccines@mail.example.com>"
   email_notifier_recipient: test@example.com
+
+sms:
+  outgoing_phone_number: "+19999999999"
+  recipient_phone_number: "+18888888888"
+  twilio_account_sid: TODO
+  twilio_auth_token: TODO
