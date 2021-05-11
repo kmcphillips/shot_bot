@@ -33,6 +33,7 @@ require_relative "lib/notifier"
 require_relative "lib/bots/base/base_http_bot"
 require_relative "lib/bots/base/walmart_bot"
 require_relative "lib/bots/walmart_billings_bot"
+require_relative "lib/bots/shoppers_bot"
 
 require_relative "lib/notifiers/console_notifier"
 require_relative "lib/notifiers/email_notifier"
