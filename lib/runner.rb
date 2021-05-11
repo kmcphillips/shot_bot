@@ -1,34 +1,25 @@
 # frozen_string_literal: true
 class Runner
-  attr_reader :interval_seconds, :bots, :notifiers, :verbose
+  attr_reader :interval_seconds, :bots, :notifiers
 
-  def initialize(verbose: false)
+  def initialize
     @interval_seconds = Global.config.interval_seconds
-    @bots = Global.config.bots
-    @notifiers = Global.config.notifiers
-    @verbose = verbose
+    @bots = Global.bots
+    @notifiers = Global.notifiers
   end
 
   def run
-    log "Starting..."
-    log "interval_seconds=#{ interval_seconds } bots=#{ bots } notifiers=#{ notifiers }"
+    Global.logger.info "Starting..."
+    Global.logger.info "interval_seconds=#{ interval_seconds } bots=#{ bots } notifiers=#{ notifiers }"
 
     loop do
-      bots.each do |bot|
-        log "Running bot #{ bot }"
-        bot.new(notifiers: notifiers).poll
+      bots.each do |bot_class|
+        Global.logger.info "Running bot #{ bot_class }"
+        bot_class.new(notifiers: notifiers).poll
       end
 
-      log "Sleeping for #{ interval_seconds } seconds"
+      Global.logger.info "Sleeping for #{ interval_seconds } seconds"
       sleep interval_seconds
     end
-  end
-
-  private
-
-  def log(message)
-    Global.logger.info("[Runner] #{ message }")
-    puts "[Runner][#{ Time.now.strftime(Global.datetime_format) }] #{ message }" if verbose
-    nil
   end
 end

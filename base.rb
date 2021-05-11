@@ -25,9 +25,9 @@ logger_file = File.open(Global.root.join("bot.log"), File::WRONLY | File::APPEND
 logger_file.sync = true
 Global.logger = Logger.new(logger_file, level: Logger::INFO)
 
-Global.datetime_format = "%Y-%m-%d %H:%M:%S"
+Global.logger.extend(ActiveSupport::Logger.broadcast(Logger.new(STDOUT))) if Global.config.verbose
 
-require_relative "lib/bots/base_http_bot"
+require_relative "lib/bots/base/base_http_bot"
 require_relative "lib/bots/walmart_bot"
 
 require_relative "lib/notifiers/console_notifier"

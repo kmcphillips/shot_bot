@@ -3,4 +3,4 @@
 require_relative "base"
 require_relative "lib/runner"
 
-Runner.new(verbose: Global.config.verbose).run
+Runner.new.run
