@@ -22,10 +22,10 @@ class BaseHTTPBot
         Global.logger.info("[#{ self.class }] success #{ response }")
 
         if response.found?
-          Global.logger.info("[#{ self.class }] found!!!")
+          Global.logger.info("[#{ self.class }] vaccine found!!!")
           # fall through and return true now
         else
-          Global.logger.info("[#{ self.class }] not found")
+          Global.logger.info("[#{ self.class }] vaccine not found")
         end
       else
         Global.logger.info("[#{ self.class }] failed #{ response }")

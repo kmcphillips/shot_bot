@@ -16,3 +16,9 @@ Work with:
 ```bash
 bundle exec repl.rb
 ```
+
+## Vaccine info
+
+Find locations here:
+
+https://covid-19.ontario.ca/vaccine-locations
