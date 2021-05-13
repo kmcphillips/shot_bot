@@ -1,29 +1,39 @@
-notifiers:
-  - EmailNotifier
-  - ConsoleNotifier
-  - SMSNotifier
+defaults:
+  smtp_config: &smtp_config
+    smtp_address: smtp.example.com
+    smtp_port: 587
+    smtp_domain: example.com
+    smtp_username: vaccines@example.com
+    smtp_password: zD3OGIC7xZ0i
+    smtp_from: "\"Vaccine Bot\" <vaccines@example.com>"
+  sms_config: &sms_config
+    outgoing_phone_number: "+19999999999"
+    twilio_account_sid: ACxxxxxxxxxxxxxxxxxxxxxxxxxx
+    twilio_auth_token: xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx
+  walmart_config: &walmart_config
+    cookie: "TODO"
 
-bots:
-  - WalmartBillingsBot
-
-walmart_bot:
-  cookie: "TODO"
-
-interval_seconds: 60
-
+interval_seconds: 20
 verbose: true
-
-email:
-  smtp_address: smtp.example.com
-  smtp_port: 587
-  smtp_domain: mail.example.com
-  smtp_username: ex@mail.example.com
-  smtp_password: asdf
-  smtp_from: "\"Vaccine Bot\" <vaccines@mail.example.com>"
-  email_notifier_recipient: test@example.com
-
-sms:
-  outgoing_phone_number: "+19999999999"
-  recipient_phone_number: "+18888888888"
-  twilio_account_sid: TODO
-  twilio_auth_token: TODO
+runners:
+  -
+    bots:
+      WalmartBot:
+        <<: *walmart_config
+        location_id: 1180
+        location_name: South Keys
+        location_address: 2210 Bank St.
+      ShoppersBot:
+    success_notifiers:
+      ConsoleNotifier:
+      EmailNotifier:
+        recipient_email: hello@example.com
+        <<: *smtp_config
+      SMSNotifier:
+        recipient_phone_number: "+18888888888"
+        <<: *sms_config
+    error_notifiers:
+      ConsoleNotifier:
+      EmailNotifier:
+        recipient_email: hello@example.com
+        <<: *smtp_config

@@ -1,8 +1,9 @@
 # frozen_string_literal: true
 class BaseHTTPBot
-  attr_reader :response
+  attr_reader :response, :config
 
-  def initialize
+  def initialize(config={})
+    @config = config
     @response = nil
   end
 

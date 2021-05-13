@@ -1,11 +1,11 @@
 # frozen_string_literal: true
 class EmailNotifier < NotifierBase
   def notify(title:, message:)
-    Global.logger.info("[EmailNotifier] recipient=#{ recipient } title=#{ title } message=#{ message }")
+    Global.logger.info("[EmailNotifier] recipient=#{ config[:recipient_email] } title=#{ title } message=#{ message }")
 
     mail = Mail.new(
-      to: recipient,
-      from: sender,
+      to: config[:recipient_email],
+      from: config[:smtp_from],
       subject: title,
       body: message,
       charset: 'UTF-8',
@@ -20,21 +20,13 @@ class EmailNotifier < NotifierBase
 
   def smtp_options
     {
-      address: Global.config.email.smtp_address,
-      port: Global.config.email.smtp_port,
-      domain: Global.config.email.smtp_domain,
-      user_name: Global.config.email.smtp_username,
-      password: Global.config.email.smtp_password,
+      address: config[:smtp_address],
+      port: config[:smtp_port],
+      domain: config[:smtp_domain],
+      user_name: config[:smtp_username],
+      password: config[:smtp_password],
       authentication: 'plain',
       enable_starttls_auto: true
     }
-  end
-
-  def recipient
-    Global.config.email.email_notifier_recipient
-  end
-
-  def sender
-    Global.config.email.smtp_from
   end
 end

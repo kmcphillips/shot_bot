@@ -1,5 +1,23 @@
 # frozen_string_literal: true
 class WalmartBot < BaseHTTPBot
+  def notification
+    {
+      title: "Found appointment at Walmart #{ config[:location_name] }",
+      message: "Walmart at #{ config[:location_address] } has an appointment. https://portal.healthmyself.net/walmarton/forms/Dpd",
+    }
+  end
+
+  def build_response
+    WalmartBot::Response.new(
+      location_id: config[:location_id],
+      hm_session_cookie: config[:cookie]
+    )
+  end
+
+  def bot_name
+    config[:location_name]
+  end
+
   class Response < BaseHTTPBot::Response
     def initialize(location_id:, hm_session_cookie:)
       super()

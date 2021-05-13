@@ -1,42 +1,59 @@
 # frozen_string_literal: true
 class Runner
-  attr_reader :interval_seconds, :bots, :notifiers, :error_notifiers
+  attr_reader :interval_seconds, :bots, :success_notifiers, :error_notifiers, :id
 
-  def initialize
-    @interval_seconds = Global.config.interval_seconds
-    @bots = Global.bots
-    @notifiers = Global.notifiers
-    @error_notifiers = Global.error_notifiers
+  def initialize(config)
+    @id = config[:id].presence || SecureRandom.hex(4)
+    @interval_seconds = config[:interval_seconds]
+    @bots = to_class_config_hash(config[:bots])
+    @success_notifiers = to_class_config_hash(config[:success_notifiers])
+    @error_notifiers = to_class_config_hash(config[:error_notifiers])
   end
 
   def run
-    Global.logger.info("Starting...")
-    Global.logger.info("interval_seconds=#{ interval_seconds } bots=#{ bots } notifiers=#{ notifiers }")
+    Global.logger.info("[Runner][#{ id }] starting interval_seconds=#{ interval_seconds } bots=#{ bots } success_notifiers=#{ success_notifiers.keys } error_notifiers=#{ error_notifiers.keys }")
 
     loop do
-      bots.each do |bot_class|
-        Global.logger.info("Running bot #{ bot_class }")
-        bot = bot_class.new
+      bots.each do |bot_class, bot_config|
+        Global.logger.info("[Runner][#{ id }] bot #{ bot_class }")
+        bot = bot_class.new(bot_config)
 
         begin
           bot.poll
           if !bot.success?
-            Notifier.notify_all(notifiers: error_notifiers, title: "Error HTTP #{ bot.response.code } #{ bot_class } ", message: "Could not complete request #{ bot } because HTTP #{ bot.response.code }.")
-            Global.logger.debug("Failed request HTTP #{ bot.response.code } with #{ bot }\n#{ bot.response.result }")
+            Global.logger.debug("[Runner][#{ id }] Failed request HTTP #{ bot.response.code } with #{ bot }\n#{ bot.response.result }")
+            notify_all(
+              notifiers: error_notifiers,
+              title: "Error HTTP #{ bot.response.code } #{ bot_class }",
+              message: "Could not complete request #{ bot } because HTTP #{ bot.response.code }."
+            )
           elsif bot.found?
-            Global.logger.info("Found #{ bot } and notifying #{ notifiers }")
-            Notifier.notify_all(notifiers: notifiers, title: bot.notification[:title], message: bot.notification[:message])
+            Global.logger.info("[Runner][#{ id }] Found #{ bot } and notifying #{ success_notifiers.keys }")
+            notify_all(notifiers: success_notifiers, title: bot.notification[:title], message: bot.notification[:message])
           end
         rescue => e
-          Global.logger.error("Error with #{ bot } and notifying #{ error_notifiers }")
+          Global.logger.error("[Runner][#{ id }] Error with #{ bot } and notifying #{ error_notifiers.keys }")
           Global.logger.error(e)
           error_message = "Error with #{ bot.inspect }\n\n#{ e.message }\n#{ e }"
-          Notifier.notify_all(notifiers: error_notifiers, title: "Error with #{ bot_class }", message: error_message)
+          notify_all(notifiers: error_notifiers, title: "Error with #{ bot_class }", message: error_message)
         end
       end
 
-      Global.logger.info("Sleeping for #{ interval_seconds } seconds")
-      sleep interval_seconds
+      Global.logger.info("[Runner][#{ id }] Sleeping for #{ interval_seconds } seconds")
+      sleep(interval_seconds)
+    end
+  end
+
+  private
+
+  def to_class_config_hash(input)
+    input.to_h{|klass, config| [klass.to_s.constantize, config] }
+  end
+
+  def notify_all(notifiers:, title:, message:)
+    notifiers.map do |notifier_class, notifier_config|
+      notifier_class.new(notifier_config).notify(title: title, message: message)
     end
   end
 end
+
