@@ -8,16 +8,17 @@ class ShoppersBot < BaseHTTPBot
   end
 
   def build_response
-    ShoppersBot::Response.new
+    ShoppersBot::Response.new(results_per_page: config[:results_per_page], latitude: config[:latitude], longitude: config[:longitude])
   end
 
   class Response < BaseHTTPBot::Response
     attr_reader :locations
 
-    def initialize
+    def initialize(results_per_page:, latitude:, longitude:)
       super()
       results_per_page = 24
-      @path = "https://www1.shoppersdrugmart.ca/en/store/getstores?latitude=45.40562569999999&longitude=-75.7276355&radius=500&unit=km&lookup=nearby&filters=RSV-CVW:TRUE,RSV-COV:TRUE&rpp=#{ results_per_page }&isCovidShotSearch=true&getCovidShotAvailability=true"
+      @path = "https://www1.shoppersdrugmart.ca/en/store/getstores?latitude=#{ latitude }&longitude=#{ longitude }&radius=500&unit=km&lookup=nearby&filters=RSV-CVW:TRUE,RSV-COV:TRUE&rpp=#{ results_per_page }&isCovidShotSearch=true&getCovidShotAvailability=true"
+      puts @path
       @headers = {}
       @http_method = :get
       @locations = []

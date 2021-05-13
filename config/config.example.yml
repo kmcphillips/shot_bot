@@ -24,6 +24,9 @@ runners:
         location_name: South Keys
         location_address: 2210 Bank St.
       ShoppersBot:
+        latitude: "44.00000000000"
+        longitude: "-73.00000000"
+        results_per_page: 24
     success_notifiers:
       ConsoleNotifier:
       EmailNotifier:
