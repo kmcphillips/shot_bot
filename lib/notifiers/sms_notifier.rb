@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class SMSNotifier
+class SMSNotifier < NotifierBase
   def notify(title:, message:)
     full_message = [title, message].map(&:presence).compact.join(" ")
 

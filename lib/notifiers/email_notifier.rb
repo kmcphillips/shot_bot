@@ -11,7 +11,7 @@ Mail.defaults do
   }
 end
 
-class EmailNotifier
+class EmailNotifier < NotifierBase
   def notify(title:, message:)
     Global.logger.info("[EmailNotifier] recipient=#{ recipient } title=#{ title } message=#{ message }")
 

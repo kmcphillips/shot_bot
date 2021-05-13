@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class ConsoleNotifier
+class ConsoleNotifier < NotifierBase
   def notify(title:, message:)
     output = "[ConsoleNotifier] title:#{ title } message:#{ message }"
     puts output
