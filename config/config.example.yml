@@ -18,25 +18,38 @@ verbose: true
 runners:
   -
     bots:
-      WalmartBot:
-        <<: *walmart_config
+      -
+        class: WalmartBot
         location_id: 1180
+        location_name: Billings Bridge
+        location_address: 2277 Riverside Drive
+        <<: *walmart_config
+      -
+        class: WalmartBot
+        location_id: 1114
         location_name: South Keys
         location_address: 2210 Bank St.
-      ShoppersBot:
+        <<: *walmart_config
+      -
+        class: ShoppersBot
         latitude: "44.00000000000"
         longitude: "-73.00000000"
         results_per_page: 24
     success_notifiers:
-      ConsoleNotifier:
-      EmailNotifier:
+      -
+        class: ConsoleNotifier
+      -
+        class: EmailNotifier
         recipient_email: hello@example.com
         <<: *smtp_config
-      SMSNotifier:
+      -
+        class: SMSNotifier
         recipient_phone_number: "+18888888888"
         <<: *sms_config
     error_notifiers:
-      ConsoleNotifier:
-      EmailNotifier:
+      -
+        class: ConsoleNotifier
+      -
+        class: EmailNotifier
         recipient_email: hello@example.com
         <<: *smtp_config
