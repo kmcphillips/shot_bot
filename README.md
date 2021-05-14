@@ -1,10 +1,18 @@
 # Shot Bot
 
+Currently supports polling Walmart and Shoppers Drug Mart in Ontario, and notifying via SMTP and Twilio SMS.
+
+
+## Getting started
+
 Add a `config.yml` with:
 
 ```bash
 cp config/config.example.yml config/config.yml
 ```
+
+The config file defines the runners, groups, and notification on success or error.
+
 
 Then to run:
 
