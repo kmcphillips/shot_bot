@@ -57,3 +57,4 @@ build-iPhoneSimulator/
 
 /bot.log
 /config/config.yml
+/userscript/*
