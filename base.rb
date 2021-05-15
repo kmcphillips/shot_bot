@@ -34,9 +34,12 @@ require_relative "lib/notifiers/console_notifier"
 require_relative "lib/notifiers/email_notifier"
 require_relative "lib/notifiers/sms_notifier"
 
-require_relative "lib/bots/base/base_http_bot"
+require_relative "lib/bots/base/base_bot"
+require_relative "lib/bots/base/base_http_bot_response"
+
 require_relative "lib/bots/walmart_bot"
 require_relative "lib/bots/shoppers_bot"
+require_relative "lib/bots/twitter_search_bot"
 
 require_relative "lib/runner"
 require_relative "lib/runner_group"

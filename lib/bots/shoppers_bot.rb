@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class ShoppersBot < BaseHTTPBot
+class ShoppersBot < BaseBot
   def notification
     {
       title: "Found appointment at Shoppers",
@@ -11,7 +11,7 @@ class ShoppersBot < BaseHTTPBot
     ShoppersBot::Response.new(results_per_page: config[:results_per_page], latitude: config[:latitude], longitude: config[:longitude])
   end
 
-  class Response < BaseHTTPBot::Response
+  class Response < BaseHttpBotResponse
     attr_reader :locations
 
     def initialize(results_per_page:, latitude:, longitude:)

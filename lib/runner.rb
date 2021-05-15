@@ -22,11 +22,11 @@ class Runner
         begin
           bot.poll
           if !bot.success?
-            Global.logger.debug("[Runner][#{ id }] Failed request HTTP #{ bot.response.code } with #{ bot }\n#{ bot.response.result }")
+            Global.logger.debug("[Runner][#{ id }] Failed request #{ bot.response.error_message } with #{ bot }\n#{ bot.response.result }")
             notify_all(
               notifiers: error_notifiers,
-              title: "Error HTTP #{ bot.response.code } #{ bot_class }",
-              message: "Could not complete request #{ bot } because HTTP #{ bot.response.code }."
+              title: "Error #{ bot.response.error_message } #{ bot_class }",
+              message: "Could not complete request #{ bot } because #{ bot.response.error_message }."
             )
           elsif bot.found?
             Global.logger.info("[Runner][#{ id }] Found #{ bot } and notifying #{ success_notifiers.map { |x| x[:class] } }")

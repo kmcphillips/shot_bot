@@ -1,5 +1,5 @@
 # frozen_string_literal: true
-class BaseHTTPBot
+class BaseBot
   attr_reader :response, :config
 
   def initialize(config={})
@@ -23,10 +23,10 @@ class BaseHTTPBot
         Global.logger.info("[#{ self.class }] success #{ response }")
 
         if response.found?
-          Global.logger.info("[#{ self.class }] vaccine found!!!")
+          Global.logger.info("[#{ self.class }] found!")
           # fall through and return true now
         else
-          Global.logger.info("[#{ self.class }] vaccine not found")
+          Global.logger.info("[#{ self.class }] not found")
         end
       else
         Global.logger.info("[#{ self.class }] failed #{ response }")
@@ -53,45 +53,5 @@ class BaseHTTPBot
       title: "#{ self.class } found",
       message: "Found a dose with #{ self.class } #{ response }",
     }
-  end
-
-  class Response
-    attr_reader :result, :path, :headers, :http_method
-
-    def initialize
-      @result = nil
-      @path = nil
-      @headers = {}
-      @http_method = :get
-    end
-
-    def fetch
-      if http_method.to_s.downcase == "get"
-        @result = HTTParty.get(path, headers: headers)
-      elsif http_method.to_s.downcase == "post"
-        @result = HTTParty.post(path, headers: headers)
-      else
-        raise "Unknown http_method #{ http_method }"
-      end
-
-      success?
-    end
-
-    def success?
-      !!(result && result.success?)
-    end
-
-    def code
-      result && result.code
-    end
-
-    def found?
-      raise NotImplementedError
-    end
-
-    def to_s
-      rescue_found = found? rescue nil
-      "#<#{ self.class } code=#{ code } success=#{ success? } found=#{ rescue_found } #{ http_method.to_s.upcase } #{ path }>"
-    end
   end
 end

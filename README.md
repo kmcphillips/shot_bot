@@ -13,6 +13,10 @@ cp config/config.example.yml config/config.yml
 
 The config file defines the runners, groups, and notification on success or error.
 
+Probably need to run:
+```
+pip3 install snscrape
+```
 
 Then to run:
 
