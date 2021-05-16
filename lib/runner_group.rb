@@ -7,17 +7,20 @@ class RunnerGroup
   end
 
   def run
-    Global.logger.info("Starting #{ config.count } #{ 'runner'.pluralize(config.count) }...")
-
-    global_config = {
-      interval_seconds: Global.config.interval_seconds, # TODO this could be moved to a different level
-    }
+    Global.logger.info("Starting #{ config.count } #{ 'runner'.pluralize(config.count) }#{ config.count > 1 ? ' in threads' : '' }...")
 
     raise "Cannot run zero Runners." if config.size == 0
-    raise "Cannot run more than one Runner for now. I have no idea if any of this is thread safe." if config.size > 1  # TODO this only runs one for now
 
-    config.map do |runner_config|
-      Runner.new(runner_config.to_h.merge(global_config)).run
+    if config.size == 1
+      Runner.new(runner_config.to_h).run
+    else
+      threads = config.map do |runner_config|
+        Thread.new do
+          Runner.new(runner_config.to_h.merge(id: "thread-#{ Thread.current.object_id }")).run
+        end
+      end
+
+      threads.each { |thread| thread.join }
     end
   end
 end
