@@ -12,7 +12,7 @@ class RunnerGroup
     raise "Cannot run zero Runners." if config.size == 0
 
     if config.size == 1
-      Runner.new(runner_config.to_h).run
+      Runner.new(config.first.to_h).run
     else
       threads = config.map do |runner_config|
         Thread.new do
